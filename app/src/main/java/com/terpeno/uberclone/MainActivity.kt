@@ -17,7 +17,9 @@ import androidx.navigation.compose.rememberNavController
 import com.terpeno.uberclone.presentation.navigation.graph.root.RootNavGraph
 import com.terpeno.uberclone.presentation.screens.auth.login.LoginScreen
 import com.terpeno.uberclone.ui.theme.UberCloneTheme
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
     private lateinit var navHostController: NavHostController;

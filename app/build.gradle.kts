@@ -57,8 +57,7 @@ dependencies {
     //Dependency Injection
     //DAGGER-HILT
     implementation(libs.hilt.android)
-    //implementation(libs.androidx.hilt.z)
-    //implementation("androidx.hilt:hilt-*:1.2.0")
+    implementation(libs.androidx.hilt.navigation.compose)
     ksp (libs.hilt.android.compiler)
     
 

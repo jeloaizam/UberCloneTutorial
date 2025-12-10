@@ -33,6 +33,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.terpeno.uberclone.R
@@ -40,11 +41,10 @@ import com.terpeno.uberclone.presentation.components.DefaultButton
 import com.terpeno.uberclone.presentation.components.DefaultTextField
 import com.terpeno.uberclone.presentation.navigation.screen.auth.AuthScreen
 import com.terpeno.uberclone.presentation.screens.auth.login.LoginViewModel
+import dagger.hilt.android.lifecycle.HiltViewModel
 
 @Composable
-fun LoginContent (navHostController: NavHostController, paddingValues: PaddingValues){
-
-    val vm: LoginViewModel = viewModel()
+fun LoginContent (navHostController: NavHostController, paddingValues: PaddingValues, vm: LoginViewModel= hiltViewModel()){
     val state = vm.state
     Box(modifier = Modifier
         .fillMaxSize()
