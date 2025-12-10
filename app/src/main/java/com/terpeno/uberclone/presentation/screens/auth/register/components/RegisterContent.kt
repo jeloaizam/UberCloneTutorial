@@ -1,5 +1,6 @@
 package com.terpeno.uberclone.presentation.screens.auth.register.components
 
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -24,6 +25,7 @@ import androidx.compose.material.icons.outlined.Person
 import androidx.compose.material.icons.outlined.Phone
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -33,35 +35,27 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.terpeno.uberclone.R
 import com.terpeno.uberclone.presentation.components.DefaultButton
 import com.terpeno.uberclone.presentation.components.DefaultOutlineTextField
+import com.terpeno.uberclone.presentation.screens.auth.register.RegisterViewModel
 
 @Composable
-fun RegisterContent (navHostController: NavHostController, paddingValues: PaddingValues){
-    var email by remember {
-        mutableStateOf("")
-    }
-    var name by remember {
-        mutableStateOf("")
-    }
-    var lastname by remember {
-        mutableStateOf("")
-    }
-    var phone by remember {
-        mutableStateOf("")
-    }
-    var password by remember {
-        mutableStateOf("")
-    }
-    var confirmPassword by remember {
-        mutableStateOf("")
+fun RegisterContent (navHostController: NavHostController, paddingValues: PaddingValues, vm: RegisterViewModel = hiltViewModel()){
+    val state=vm.state
+    val context = LocalContext.current
+    LaunchedEffect(key1 = vm.errorMessage) {
+        if ( vm.errorMessage.isNotEmpty()){
+            Toast.makeText(context, vm.errorMessage , Toast.LENGTH_SHORT).show()
+        }
     }
     Box(
         modifier= Modifier
@@ -83,8 +77,8 @@ fun RegisterContent (navHostController: NavHostController, paddingValues: Paddin
                 fontSize = 27.sp,
                 modifier = Modifier
                     .rotate(degrees = 90f)
-                    .padding(top=30.dp)
-                    .clickable{navHostController.popBackStack()}
+                    .padding(top = 30.dp)
+                    .clickable { navHostController.popBackStack() }
 
             )
             Spacer(modifier = Modifier.height(100.dp))
@@ -94,14 +88,14 @@ fun RegisterContent (navHostController: NavHostController, paddingValues: Paddin
                 fontSize = 27.sp,
                 modifier = Modifier
                     .rotate(degrees = 90f)
-                    .padding(top=30.dp)
+                    .padding(top = 30.dp)
 
             )
         }
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(start= 60.dp, bottom= 35.dp)
+                .padding(start = 60.dp, bottom = 35.dp)
                 .background(
                     brush = Brush.linearGradient(
                         colors = listOf(Color(0xFF4D4D4D), Color(0xFF100F0F)),
@@ -136,65 +130,65 @@ fun RegisterContent (navHostController: NavHostController, paddingValues: Paddin
                 ){
                     DefaultOutlineTextField(
                         modifier = Modifier,
-                        value = name,
+                        value = state.name,
                         label = "Nombre",
                         icon = Icons.Outlined.Person,
                         onValueChange = {
-                            name = it
+                            vm.onNameInput(it)
                         }
                     )
 
                     DefaultOutlineTextField(
                         modifier = Modifier,
-                        value = lastname,
+                        value = state.lastname,
                         label = "Apellido",
                         icon = Icons.Outlined.Person,
                         onValueChange = {
-                            lastname = it
+                            vm.onLastnameInput(it)
                         }
                     )
 
                     DefaultOutlineTextField(
                         modifier = Modifier,
-                        value = email,
+                        value = state.email,
                         label = "Email",
                         icon = Icons.Outlined.Email,
                         keyboardType = KeyboardType.Email,
                         onValueChange = {
-                            email = it
+                            vm.onEmailInput(it)
                         }
                     )
 
                     DefaultOutlineTextField(
                         modifier = Modifier,
-                        value = phone,
+                        value = state.phone,
                         label = "Teléfono",
                         icon = Icons.Outlined.Phone,
                         keyboardType = KeyboardType.Number,
                         onValueChange = {
-                            phone = it
+                            vm.onPhoneInput(it)
                         }
                     )
 
                     DefaultOutlineTextField(
                         modifier = Modifier,
-                        value = password,
+                        value = state.password,
                         label = "Password",
                         icon = Icons.Outlined.Lock,
                         hideText= true,
                         onValueChange = {
-                            password = it
+                            vm.onPasswordInput(it)
                         }
                     )
 
                     DefaultOutlineTextField(
                         modifier = Modifier,
-                        value = confirmPassword,
+                        value = state.confirmPassword,
                         label = "Confirm Password",
                         icon = Icons.Outlined.Lock,
                         hideText= true,
                         onValueChange = {
-                            confirmPassword = it
+                            vm.onConfirmPasswordInput(it)
                         }
                     )
                 }
@@ -205,7 +199,9 @@ fun RegisterContent (navHostController: NavHostController, paddingValues: Paddin
                 DefaultButton(
                     modifier = Modifier,
                     text = "Crear cuenta",
-                    onClick = {},
+                    onClick = {
+                        vm.register()
+                    },
                     color = Color.White,
                     textColor = Color.Black,
 
@@ -235,9 +231,6 @@ fun RegisterContent (navHostController: NavHostController, paddingValues: Paddin
                             .background(Color.White)
                     )
                 }
-//                    Spacer(
-//                        modifier = Modifier.height(30.dp)
-//                    )
                 Row (
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.Center

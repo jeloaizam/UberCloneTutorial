@@ -1,6 +1,7 @@
 package com.terpeno.uberclone.presentation.screens.auth.login
 
 import android.util.Log
+import android.util.Patterns
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -13,6 +14,8 @@ class LoginViewModel @Inject constructor(): ViewModel() {
     var state by mutableStateOf(LoginState())
         private set
 
+    var errorMessage by mutableStateOf(value = "");
+
     fun onEmailInput(email: String){
         state = state.copy(email = email)
     }
@@ -22,7 +25,29 @@ class LoginViewModel @Inject constructor(): ViewModel() {
     }
 
     fun login(){
-        Log.d("LoginViewModel", "Email: ${state.email}")
-        Log.d("LoginViewModel", "Password: ${state.password}")
+        if (isValidForm()){
+            Log.d("LoginViewModel", "Email: ${state.email}")
+            Log.d("LoginViewModel", "Password: ${state.password}")
+        }
+    }
+
+    fun isValidForm(): Boolean {
+        errorMessage = ""
+        if (state.email == ""){
+            errorMessage = "Ingresa el email"
+            return false
+        }
+        if (state.password.isEmpty()){
+            errorMessage = "Ingresa el password"
+            return false
+        }
+        else if (!Patterns.EMAIL_ADDRESS.matcher(state.email).matches()) {
+            errorMessage = "Ingresa el password"
+        }
+        else if (state.password.length < 6){
+            errorMessage = "El password debe tener al menos 6 caracteres"
+            return false
+        }
+        return true
     }
 }
